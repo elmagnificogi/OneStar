@@ -417,7 +417,7 @@
             this.f_GroupBoxStatus1.Controls.Add(this.f_TextBoxStatus3_1);
             this.f_GroupBoxStatus1.Location = new System.Drawing.Point(228, 77);
             this.f_GroupBoxStatus1.Name = "f_GroupBoxStatus1";
-            this.f_GroupBoxStatus1.Size = new System.Drawing.Size(322, 100);
+            this.f_GroupBoxStatus1.Size = new System.Drawing.Size(341, 100);
             this.f_GroupBoxStatus1.TabIndex = 11;
             this.f_GroupBoxStatus1.TabStop = false;
             this.f_GroupBoxStatus1.Text = "ステータス";
@@ -866,7 +866,7 @@
             this.f_GroupBoxStatus2.Controls.Add(this.f_LabelStatus23_2);
             this.f_GroupBoxStatus2.Location = new System.Drawing.Point(228, 77);
             this.f_GroupBoxStatus2.Name = "f_GroupBoxStatus2";
-            this.f_GroupBoxStatus2.Size = new System.Drawing.Size(322, 100);
+            this.f_GroupBoxStatus2.Size = new System.Drawing.Size(341, 100);
             this.f_GroupBoxStatus2.TabIndex = 11;
             this.f_GroupBoxStatus2.TabStop = false;
             this.f_GroupBoxStatus2.Text = "ステータス";
@@ -2848,7 +2848,7 @@
             this.f_GroupBoxStatus3.Controls.Add(this.f_TextBoxLevel_3);
             this.f_GroupBoxStatus3.Location = new System.Drawing.Point(228, 77);
             this.f_GroupBoxStatus3.Name = "f_GroupBoxStatus3";
-            this.f_GroupBoxStatus3.Size = new System.Drawing.Size(322, 100);
+            this.f_GroupBoxStatus3.Size = new System.Drawing.Size(341, 100);
             this.f_GroupBoxStatus3.TabIndex = 11;
             this.f_GroupBoxStatus3.TabStop = false;
             this.f_GroupBoxStatus3.Text = "ステータス";
