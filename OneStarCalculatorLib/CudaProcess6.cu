@@ -15,6 +15,7 @@ const int c_SizeResult = 32;
 
 // 計算するカーネル
 __global__ static void kernel_calc(
+	CudaConst* pConst,
 	CudaInputMaster* pSrc,
 	_u32* pCoefficient,
 	_u32* pSearchPattern,
@@ -120,6 +121,7 @@ __global__ static void kernel_calc(
 	_u32 next[7]; // S0Upper、S0Lower、S1Upper、S1Lower
 	_u64 temp64;
 	_u32 temp32;
+	_u32 temp32_2;
 	for(int i = 0; i < 16; ++i)
 	{
 		seeds[0] = processedTargetUpper ^ pCoefficient[i * 2];
@@ -172,40 +174,43 @@ __global__ static void kernel_calc(
 		CudaNext(next); // PID
 
 		{
-			int ivs[6] = { -1, -1, -1, -1, -1, -1 };
+			// 個体値
+			int ivs[8] = { -1, -1, -1, -1, -1, -1, 31, 31 };
+
 			temp32 = 0;
 			do {
-				int fixedIndex = 0;
 				do {
-					fixedIndex = CudaNext(next, 7); // V箇所
-				} while(fixedIndex >= 6);
+					temp32_2 = CudaNext(next, 7u);
+				} while(ivs[temp32_2] == 31);
 
-				if(ivs[fixedIndex] == -1)
+				if(pokemon[2].ivs[temp32_2] != 31)
 				{
-					ivs[fixedIndex] = 31;
-					++temp32;
+					temp32 = 10;
+					break;
 				}
+
+				ivs[temp32_2] = 31;
+				++temp32;
 			} while(temp32 < pokemon[2].flawlessIvs);
 
-			// 個体値
-			temp32 = 1;
+			if(temp32 == 10)
+			{
+				continue;
+			}
+
 			for(int i = 0; i < 6; ++i)
 			{
-				if(ivs[i] == 31)
+				if(ivs[i] != 31)
 				{
-					if(pokemon[2].ivs[i] != 31)
+					if(pokemon[2].ivs[i] != CudaNext(next, 0x1Fu))
 					{
-						temp32 = 0;
+						temp32 = 10;
 						break;
 					}
 				}
-				else if(pokemon[2].ivs[i] != CudaNext(next, 0x1F))
-				{
-					temp32 = 0;
-					break;
-				}
 			}
-			if(temp32 == 0)
+
+			if(temp32 == 10)
 			{
 				continue;
 			}
@@ -214,12 +219,12 @@ __global__ static void kernel_calc(
 			temp32 = 0;
 			if(pokemon[2].abilityFlag == 3)
 			{
-				temp32 = CudaNext(next, 1);
+				temp32 = CudaNext(next, 1u);
 			}
 			else
 			{
 				do {
-					temp32 = CudaNext(next, 3);
+					temp32 = CudaNext(next, 3u);
 				} while(temp32 >= 3);
 			}
 			if((pokemon[2].ability >= 0 && pokemon[2].ability != temp32) || (pokemon[2].ability == -1 && temp32 >= 2))
@@ -232,17 +237,17 @@ __global__ static void kernel_calc(
 			{
 				temp32 = 0;
 				do {
-					temp32 = CudaNext(next, 0xFF);
+					temp32 = CudaNext(next, 0xFFu);
 				} while(temp32 >= 253);
 			}
 
 			// 性格
 			temp32 = 0;
 			do {
-				temp32 = CudaNext(next, 0x1F);
-			} while(temp32 >= 25);
+				temp32 = CudaNext(next, pConst->natureTable[pokemon[2].natureTableId].randMax);
+			} while(temp32 >= pConst->natureTable[pokemon[2].natureTableId].patternCount);
 
-			if(temp32 != pokemon[2].nature)
+			if(pConst->natureTable[pokemon[2].natureTableId].natureId[temp32] != pokemon[2].nature)
 			{
 				continue;
 			}
@@ -260,79 +265,85 @@ __global__ static void kernel_calc(
 			next[3] = seeds[3];
 
 			{
-				int ivs[6] = { -1, -1, -1, -1, -1, -1 };
+				// 個体値
+				int ivs[8] = { -1, -1, -1, -1, -1, -1, 31, 31 };
+
 				temp32 = 0;
 				do {
-					int fixedIndex = 0;
 					do {
-						fixedIndex = CudaNext(seeds, 7); // V箇所
-					} while(fixedIndex >= 6);
+						temp32_2 = CudaNext(seeds, 7u);
+					} while(ivs[temp32_2] == 31);
 
-					if(ivs[fixedIndex] == -1)
+					if(pokemon[0].ivs[temp32_2] != 31)
 					{
-						ivs[fixedIndex] = 31;
-						++temp32;
+						temp32 = 10;
+						break;
 					}
+
+					ivs[temp32_2] = 31;
+					++temp32;
 				} while(temp32 < pokemon[0].flawlessIvs);
 
-				// 個体値
-				temp32 = 1;
+				if(temp32 == 10)
+				{
+					continue;
+				}
+
 				for(int i = 0; i < 6; ++i)
 				{
-					if(ivs[i] == 31)
+					if(ivs[i] != 31)
 					{
-						if(pokemon[0].ivs[i] != 31)
+						if(pokemon[0].ivs[i] != CudaNext(seeds, 0x1Fu))
 						{
-							temp32 = 0;
+							temp32 = 10;
 							break;
 						}
 					}
-					else if(pokemon[0].ivs[i] != CudaNext(seeds, 0x1F))
-					{
-						temp32 = 0;
-						break;
-					}
 				}
-				if(temp32 == 0)
+
+				if(temp32 == 10)
 				{
 					continue;
 				}
 			}
 			{
-				int ivs[6] = { -1, -1, -1, -1, -1, -1 };
+				// 個体値
+				int ivs[8] = { -1, -1, -1, -1, -1, -1, 31, 31 };
+
 				temp32 = 0;
 				do {
-					int fixedIndex = 0;
 					do {
-						fixedIndex = CudaNext(next, 7); // V箇所
-					} while(fixedIndex >= 6);
+						temp32_2 = CudaNext(next, 7u);
+					} while(ivs[temp32_2] == 31);
 
-					if(ivs[fixedIndex] == -1)
+					if(pokemon[1].ivs[temp32_2] != 31)
 					{
-						ivs[fixedIndex] = 31;
-						++temp32;
+						temp32 = 10;
+						break;
 					}
+
+					ivs[temp32_2] = 31;
+					++temp32;
 				} while(temp32 < pokemon[1].flawlessIvs);
 
-				// 個体値
-				temp32 = 1;
+				if(temp32 == 10)
+				{
+					continue;
+				}
+
 				for(int i = 0; i < 6; ++i)
 				{
-					if(ivs[i] == 31)
+					if(ivs[i] != 31)
 					{
-						if(pokemon[1].ivs[i] != 31)
+						if(pokemon[1].ivs[i] != CudaNext(next, 0x1Fu))
 						{
-							temp32 = 0;
+							temp32 = 10;
 							break;
 						}
 					}
-					else if(pokemon[1].ivs[i] != CudaNext(next, 0x1F))
-					{
-						temp32 = 0;
-						break;
-					}
 				}
-				if(temp32 == 0)
+
+				if(temp32 == 10)
 				{
 					continue;
 				}
@@ -342,12 +353,12 @@ __global__ static void kernel_calc(
 			temp32 = 0;
 			if(pokemon[0].abilityFlag == 3)
 			{
-				temp32 = CudaNext(seeds, 1);
+				temp32 = CudaNext(seeds, 1u);
 			}
 			else
 			{
 				do {
-					temp32 = CudaNext(seeds, 3);
+					temp32 = CudaNext(seeds, 3u);
 				} while(temp32 >= 3);
 			}
 			if((pokemon[0].ability >= 0 && pokemon[0].ability != temp32) || (pokemon[0].ability == -1 && temp32 >= 2))
@@ -357,12 +368,12 @@ __global__ static void kernel_calc(
 			temp32 = 0;
 			if(pokemon[1].abilityFlag == 3)
 			{
-				temp32 = CudaNext(next, 1);
+				temp32 = CudaNext(next, 1u);
 			}
 			else
 			{
 				do {
-					temp32 = CudaNext(next, 3);
+					temp32 = CudaNext(next, 3u);
 				} while(temp32 >= 3);
 			}
 			if((pokemon[1].ability >= 0 && pokemon[1].ability != temp32) || (pokemon[1].ability == -1 && temp32 >= 2))
@@ -375,31 +386,34 @@ __global__ static void kernel_calc(
 			{
 				temp32 = 0;
 				do {
-					temp32 = CudaNext(seeds, 0xFF);
+					temp32 = CudaNext(seeds, 0xFFu);
 				} while(temp32 >= 253);
 			}
 			if(!pokemon[1].isNoGender)
 			{
 				temp32 = 0;
 				do {
-					temp32 = CudaNext(next, 0xFF);
+					temp32 = CudaNext(next, 0xFFu);
 				} while(temp32 >= 253);
 			}
 
 			// 性格
 			temp32 = 0;
 			do {
-				temp32 = CudaNext(seeds, 0x1F);
-			} while(temp32 >= 25);
-			if(temp32 != pokemon[0].nature)
+				temp32 = CudaNext(seeds, pConst->natureTable[pokemon[0].natureTableId].randMax);
+			} while(temp32 >= pConst->natureTable[pokemon[0].natureTableId].patternCount);
+
+			if(pConst->natureTable[pokemon[0].natureTableId].natureId[temp32] != pokemon[0].nature)
 			{
 				continue;
 			}
+
 			temp32 = 0;
 			do {
-				temp32 = CudaNext(next, 0x1F);
-			} while(temp32 >= 25);
-			if(temp32 != pokemon[1].nature)
+				temp32 = CudaNext(next, pConst->natureTable[pokemon[1].natureTableId].randMax);
+			} while(temp32 >= pConst->natureTable[pokemon[1].natureTableId].patternCount);
+
+			if(pConst->natureTable[pokemon[1].natureTableId].natureId[temp32] != pokemon[1].nature)
 			{
 				continue;
 			}
@@ -439,7 +453,7 @@ void Cuda6SetMasterData()
 	}
 	for(int i = 0; i < 16; ++i)
 	{
-		cu_HostInputCoefficientData[i * 2]     = (_u32)(g_CoefficientData[i] >> 32);
+		cu_HostInputCoefficientData[i * 2] = (_u32)(g_CoefficientData[i] >> 32);
 		cu_HostInputCoefficientData[i * 2 + 1] = (_u32)(g_CoefficientData[i] & 0xFFFFFFFFull);
 		cu_HostInputSearchPattern[i] = (_u32)g_SearchPattern[i];
 	}
@@ -448,6 +462,7 @@ void Cuda6SetMasterData()
 	cudaMemcpy(pDeviceInput, cu_HostInputMaster, sizeof(CudaInputMaster), cudaMemcpyHostToDevice);
 	cudaMemcpy(pDeviceCoefficientData, cu_HostInputCoefficientData, sizeof(_u32) * 32, cudaMemcpyHostToDevice);
 	cudaMemcpy(pDeviceSearchPattern, cu_HostInputSearchPattern, sizeof(_u32) * 16, cudaMemcpyHostToDevice);
+	cudaMemcpy(pDeviceResultCount, cu_HostResultCount, sizeof(int), cudaMemcpyHostToDevice);
 }
 
 // 計算
@@ -460,7 +475,7 @@ void Cuda6Process(_u32 param, int partition)
 	//カーネル
 	dim3 block(c_SizeBlockX, 1, 1);
 	dim3 grid(c_SizeGridX / partition, 1, 1);
-	kernel_calc << < grid, block >> > (pDeviceInput, pDeviceCoefficientData, pDeviceSearchPattern, pDeviceResultCount, pDeviceResult, param);
+	kernel_calc << < grid, block >> > (cu_DeviceConstData, pDeviceInput, pDeviceCoefficientData, pDeviceSearchPattern, pDeviceResultCount, pDeviceResult, param);
 
 	//デバイス->ホストへ結果を転送
 	cudaMemcpy(cu_HostResult, pDeviceResult, sizeof(_u64) * c_SizeResult, cudaMemcpyDeviceToHost);

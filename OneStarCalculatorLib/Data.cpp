@@ -2,6 +2,9 @@
 #include "Util.h"
 #include "Const.h"
 
+// 定数
+NatureTable c_NatureTable[3];
+
 // 計算用データ
 _u64 g_TempMatrix[256];
 _u64 g_InputMatrix[64]; // CalculateInverseMatrixの前にセットする
@@ -15,6 +18,50 @@ _u64 g_CoefficientData[0x4000];
 _u64 g_SearchPattern[0x4000];
 
 _u64 l_Temp[256];
+
+// 定数データ初期化
+void InitializeConstData()
+{
+	c_NatureTable[0].randMax = 0x1F;
+	c_NatureTable[0].patternCount = 25;
+	for(int i = 0; i < 25; ++i)
+	{
+		c_NatureTable[0].natureId[i] = i;
+	}
+
+	// ストリンダー専用
+	// ハイ
+	c_NatureTable[1].randMax = 0xF;
+	c_NatureTable[1].patternCount = 13;
+	c_NatureTable[1].natureId[0]  =  3;
+	c_NatureTable[1].natureId[1]  =  4;
+	c_NatureTable[1].natureId[2]  =  2;
+	c_NatureTable[1].natureId[3]  =  8;
+	c_NatureTable[1].natureId[4]  =  9;
+	c_NatureTable[1].natureId[5]  = 19;
+	c_NatureTable[1].natureId[6]  = 22;
+	c_NatureTable[1].natureId[7]  = 11;
+	c_NatureTable[1].natureId[8]  = 13;
+	c_NatureTable[1].natureId[9]  = 14;
+	c_NatureTable[1].natureId[10] =  0;
+	c_NatureTable[1].natureId[11] =  6;
+	c_NatureTable[1].natureId[12] = 24;
+	// ロー
+	c_NatureTable[2].randMax = 0xF;
+	c_NatureTable[2].patternCount = 12;
+	c_NatureTable[2].natureId[0] = 1;
+	c_NatureTable[2].natureId[1] = 5;
+	c_NatureTable[2].natureId[2] = 7;
+	c_NatureTable[2].natureId[3] = 10;
+	c_NatureTable[2].natureId[4] = 12;
+	c_NatureTable[2].natureId[5] = 15;
+	c_NatureTable[2].natureId[6] = 16;
+	c_NatureTable[2].natureId[7] = 17;
+	c_NatureTable[2].natureId[8] = 18;
+	c_NatureTable[2].natureId[9] = 20;
+	c_NatureTable[2].natureId[10] =21;
+	c_NatureTable[2].natureId[11] =23;
+}
 
 // 変換行列計算
 void InitializeTransformationMatrix()
@@ -196,3 +243,4 @@ void CalculateCoefficientData(int length)
 		}
 	}
 }
+

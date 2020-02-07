@@ -19,12 +19,16 @@ namespace OneStarCalculator
 		// 結果
 		public List<ulong> Result { get; } = new List<ulong>();
 
+		// 共通
+		[DllImport("OneStarCalculatorLib.dll")]
+		static extern void InitializeConstData();
+
 		#region ★1～2検索設定
 		[DllImport("OneStarCalculatorLib.dll")]
 		static extern void Prepare(int rerolls);
 
 		[DllImport("OneStarCalculatorLib.dll")]
-		public static extern void Set12Condition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
+		public static extern void Set12Condition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int natureTableId, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
 
 		[DllImport("OneStarCalculatorLib.dll")]
 		static extern ulong Search(ulong ivs);
@@ -35,7 +39,7 @@ namespace OneStarCalculator
 		static extern void PrepareSix(int ivOffset);
 
 		[DllImport("OneStarCalculatorLib.dll")]
-		public static extern void Set35Condition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
+		public static extern void Set35Condition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int natureTableId, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
 
 		[DllImport("OneStarCalculatorLib.dll")]
 		public static extern void SetTargetCondition6(int iv1, int iv2, int iv3, int iv4, int iv5, int iv6);
@@ -52,7 +56,7 @@ namespace OneStarCalculator
 		public static extern void CudaInitialize();
 
 		[DllImport("OneStarCalculatorLib.dll")]
-		public static extern void SetCudaCondition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
+		public static extern void SetCudaCondition(int index, int iv0, int iv1, int iv2, int iv3, int iv4, int iv5, int ability, int nature, int natureTableId, int characteristic, bool noGender, int abilityFlag, int flawlessIvs);
 
 		[DllImport("OneStarCalculatorLib.dll")]
 		public static extern void SetCudaTargetCondition6(int iv1, int iv2, int iv3, int iv4, int iv5, int iv6);
@@ -87,6 +91,7 @@ namespace OneStarCalculator
 		public SeedSearcher(Mode mode)
 		{
 			m_Mode = mode;
+			InitializeConstData();
 		}
 
 		private readonly object lockObj = new object();

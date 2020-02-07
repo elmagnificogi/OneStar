@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.f_GroupBoxPokemon_1 = new System.Windows.Forms.GroupBox();
@@ -3262,6 +3263,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+
             this.f_StripMenuItemLanguage,
             this.f_StripMenuItemWindowSize,
             this.f_StripMenuItemEventId,
@@ -3280,6 +3282,7 @@
             this.f_MenuItemLanguageEn,
             this.f_MenuItemLanguageZh,
             this.f_MenuItemLanguageZh_TW});
+
             this.f_StripMenuItemLanguage.ForeColor = System.Drawing.SystemColors.ControlText;
             this.f_StripMenuItemLanguage.Name = "f_StripMenuItemLanguage";
             this.f_StripMenuItemLanguage.Size = new System.Drawing.Size(77, 21);
@@ -3373,6 +3376,7 @@
             // f_MenuItemThreadCount
             // 
             this.f_MenuItemThreadCount.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+
             this.f_MenuItemGpuLoop21,
             this.f_MenuItemGpuLoop22,
             this.f_MenuItemGpuLoop23,
@@ -3382,6 +3386,7 @@
             this.f_MenuItemGpuLoop27,
             this.f_MenuItemGpuLoop28,
             this.f_MenuItemGpuLoop29});
+
             this.f_MenuItemThreadCount.Name = "f_MenuItemThreadCount";
             this.f_MenuItemThreadCount.Size = new System.Drawing.Size(197, 22);
             this.f_MenuItemThreadCount.Text = "スレッド数";
@@ -3645,6 +3650,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
 
 		}
 
